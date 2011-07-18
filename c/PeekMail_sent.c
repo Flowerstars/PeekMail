@@ -26,16 +26,15 @@
 #include "guilcd.h"
 #include "guilistbox.h"
 
-#include "PeekMail_main.h"
 #include "PeekMail_text.h"
 #include "PeekMail_image.h"
 #include "PeekMail_id.h"
 #include "PeekMail_menutable.h"
 #include "PeekMail_sent.h"
 #include "PeekMail_draft.h"
+#include "PeekMail_get_mail_info.h"
+#include "PeekMail_main.h"
 
-#include "HelloPeek_text.h"
-#include "HelloPeek_image.h"
 
 
 /**--------------------------------------------------------------------------*/
@@ -100,15 +99,12 @@ MMIPEEKMAIL_WINDOW_ID_E g_win_id_sent = MMI_PEEK_MAIL_SENT_WIN_ID;
 //  Note: 
 /*****************************************************************************/
 
-LOCAL void AppendMailListItem(
+LOCAL void AppendMailListItem_sent(
 							  MMI_CTRL_ID_T    ctrl_id,
 							  MMI_IMAGE_ID_T   image_id,
 							  MMI_TEXT_ID_T    text_from_id,
 							  MMI_TEXT_ID_T    text_time_id,
 							  MMI_TEXT_ID_T    text_subject_id
-							  //MMI_TEXT_ID_T    left_softkey_id,
-							  //MMI_TEXT_ID_T    middle_softkey_id,
-							  //MMI_TEXT_ID_T    right_softkey_id
 							  )
 {
 	GUILIST_ITEM_T			item_t	   = {0};
@@ -152,19 +148,45 @@ LOCAL MMI_RESULT_E HandlePeekMailSentWinMsg(
     GUI_LCD_DEV_INFO	lcd_dev_info = {GUI_LCD_0, GUI_BLOCK_0};
 	MMI_CTRL_ID_T	  	ctrl_id		 = MMI_PEEK_MAIL_SENT_CTRL_ID;
 
+	uint16				mail_num = 0;
+	uint16				mail_index = 0;
+	char 				*mail_file_name;
+	uint16				file_name_len = 0;
+	PEEKMAIL_MAIL_STRUCT mail_detail;
+
     lcd_dev_info.lcd_id		= GUI_MAIN_LCD_ID;
     lcd_dev_info.block_id	= GUI_BLOCK_MAIN;
 
     switch(msg_id)
     {
     case MSG_OPEN_WINDOW:	
+		//mail_num = PeekMail_GetMailNum(SENT_INFO);
 		MMK_SetAtvCtrl(win_id, ctrl_id);
 		GUILIST_SetMaxItem(ctrl_id, 3, FALSE);
 		GUILIST_SetNeedPrgbar(ctrl_id,TRUE);
 		GUILIST_SetTitleIndexType(ctrl_id, GUILIST_TITLE_INDEX_DEFAULT);
 		GUILIST_SetTextFont(ctrl_id, SONG_FONT_14, MMI_WHITE_COLOR);
-		AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_UNREAD_ICON, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_FROM_1, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_TIME_1, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_SUBJ_1/*,STXT_OK, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_VIEW, STXT_RETURN*/);
-		AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_STARRED_ICON, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_FROM_3, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_TIME_3, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_SUBJ_3/*, STXT_ANSWER, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_VIEW, STXT_RETURN*/);
+
+		/*for (mail_index = mail_num; mail_index>0; mail_index--)
+		{	
+			mail_file_name = (char *)malloc(32 * sizeof(char)); 
+			memset(mail_file_name, 0, sizeof(mail_file_name));
+			sprintf(mail_file_name,  "%s%d", SENT_PATH, mail_index);
+			memset(&mail_detail, 0, sizeof(mail_detail));
+			PeekMail_GetMailStructure(mail_file_name, &mail_detail, GEN_LIST_INFO);
+
+			if (0 == mail_detail.read_flag)
+			{
+				AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_UNREAD_ICON, mail_detail.from, mail_detail.time, mail_detail.subject);
+			}
+			else
+			{
+				AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_READ_ICON, mail_detail.from, mail_detail.time, mail_detail.subject);
+			}
+		}*/
+
+		AppendMailListItem_sent(ctrl_id, IMG_PEEKMAIL_UNREAD_ICON, TXT_PEEKMAIL_EXAMPLE_FROM_1, TXT_PEEKMAIL_EXAMPLE_TIME_1, TXT_PEEKMAIL_EXAMPLE_SUBJ_1);
+		AppendMailListItem_sent(ctrl_id, IMG_PEEKMAIL_STAR_ICON, TXT_PEEKMAIL_EXAMPLE_FROM_2, TXT_PEEKMAIL_EXAMPLE_TIME_2, TXT_PEEKMAIL_EXAMPLE_SUBJ_2);
 		break;
 
     case MSG_GET_FOCUS:
@@ -191,7 +213,8 @@ LOCAL MMI_RESULT_E HandlePeekMailSentWinMsg(
         break;
 
 	case MSG_CTL_MIDSK:
-		//MMK_CloseWin(win_id);
+	case MSG_CTL_PENOK:
+		//MMI_CreatePeekMailViewWin(INBOX_PATH, MMI_PEEK_MAIL_SENT_CTRL_ID);
 		break;
 		
     case MSG_APP_OK:
@@ -232,7 +255,8 @@ LOCAL MMI_RESULT_E HandlePeekMailSentMenuWinMsg(
 		GUIMENU_GetId(MMI_PEEK_MAIL_SENT_MENU_CTRL_ID,&group_id,&menu_id);
 		switch (menu_id)
 		{
-			case ID_PEEKMAIL_OPEN_MESSAGE:
+			case ID_PEEKMAIL_OPEN_MESSAGE:	
+				//MMI_CreatePeekMailViewWin(INBOX_PATH, MMI_PEEK_MAIL_SENT_CTRL_ID);
 				break;
 			case ID_PEEKMAIL_COMPOSE:
 				MMK_CloseWin(win_id);

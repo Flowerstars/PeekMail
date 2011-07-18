@@ -33,8 +33,6 @@
 #include "PeekMail_draft.h"
 
 
-#include "HelloPeek_text.h"
-#include "HelloPeek_image.h"
 
 
 /**--------------------------------------------------------------------------*/
@@ -100,15 +98,12 @@ MMIPEEKMAIL_WINDOW_ID_E g_win_id_save = MMI_PEEK_MAIL_SAVED_WIN_ID;
 //  Note: 
 /*****************************************************************************/
 
-LOCAL void AppendMailListItem(
+LOCAL void AppendMailListItem_saved(
 							  MMI_CTRL_ID_T    ctrl_id,
 							  MMI_IMAGE_ID_T   image_id,
 							  MMI_TEXT_ID_T    text_from_id,
 							  MMI_TEXT_ID_T    text_time_id,
 							  MMI_TEXT_ID_T    text_subject_id
-							  //MMI_TEXT_ID_T    left_softkey_id,
-							  //MMI_TEXT_ID_T    middle_softkey_id,
-							  //MMI_TEXT_ID_T    right_softkey_id
 							  )
 {
 	GUILIST_ITEM_T			item_t	   = {0};
@@ -163,9 +158,9 @@ LOCAL MMI_RESULT_E HandlePeekMailSavedWinMsg(
 		GUILIST_SetNeedPrgbar(ctrl_id,TRUE);
 		GUILIST_SetTitleIndexType(ctrl_id, GUILIST_TITLE_INDEX_DEFAULT);
 		GUILIST_SetTextFont(ctrl_id, SONG_FONT_14, MMI_WHITE_COLOR);
-		AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_UNREAD_ICON, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_FROM_1, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_TIME_1, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_SUBJ_1/*,STXT_OK, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_VIEW, STXT_RETURN*/);
-		AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_READ_ICON, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_FROM_2, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_TIME_2, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_SUBJ_2/*, STXT_SELECT, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_VIEW, STXT_RETURN*/);
-		AppendMailListItem(ctrl_id, IMG_HELLOPEEK_MAIL_STARRED_ICON, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_FROM_3, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_TIME_3, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_EXAMPLE_SUBJ_3/*, STXT_ANSWER, TXT_HELLOPEEK_DEMO_LIST_BOX_MAIL_VIEW, STXT_RETURN*/);
+		AppendMailListItem_saved(ctrl_id, IMG_PEEKMAIL_UNREAD_ICON, TXT_PEEKMAIL_EXAMPLE_FROM_1, TXT_PEEKMAIL_EXAMPLE_TIME_1, TXT_PEEKMAIL_EXAMPLE_SUBJ_1);
+		AppendMailListItem_saved(ctrl_id, IMG_PEEKMAIL_READ_ICON, TXT_PEEKMAIL_EXAMPLE_FROM_2, TXT_PEEKMAIL_EXAMPLE_TIME_2, TXT_PEEKMAIL_EXAMPLE_SUBJ_2);
+		AppendMailListItem_saved(ctrl_id, IMG_PEEKMAIL_STAR_ICON, TXT_PEEKMAIL_EXAMPLE_FROM_3, TXT_PEEKMAIL_EXAMPLE_TIME_3, TXT_PEEKMAIL_EXAMPLE_SUBJ_3);
 		break;
 
     case MSG_GET_FOCUS:

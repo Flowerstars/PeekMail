@@ -52,16 +52,15 @@
 //  Note: 
 /*****************************************************************************/
 
-LOCAL void AppendMailListItem(
+
+LOCAL void AppendMailListItem_draft(
 							  MMI_CTRL_ID_T    ctrl_id,
 							  MMI_IMAGE_ID_T   image_id,
 							  MMI_TEXT_ID_T    text_from_id,
 							  MMI_TEXT_ID_T    text_time_id,
 							  MMI_TEXT_ID_T    text_subject_id
-							  //MMI_TEXT_ID_T    left_softkey_id,
-							 // MMI_TEXT_ID_T    middle_softkey_id,
-							  //MMI_TEXT_ID_T    right_softkey_id
 							  );
+
 
 
 LOCAL MMI_RESULT_E HandlePeekMailDraftWinMsg(
